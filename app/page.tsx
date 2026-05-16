@@ -1,6 +1,7 @@
 import Guestbook from "@/components/Guestbook";
 import MathGame from "@/components/MathGame";
 import DressUpGame from "@/components/DressUpGame";
+import MathChatbot from "@/components/MathChatbot";
 
 export const dynamic = 'force-dynamic';
 
@@ -25,6 +26,11 @@ export default function Home() {
             시작하기 (기능 추가 예정)
           </button>
         </div>
+      </section>
+
+      {/* AI 수학 선생님 챗봇 섹션 */}
+      <section className="w-full max-w-5xl mx-auto mt-16">
+        <MathChatbot />
       </section>
 
       {/* 옷 입히기 게임 섹션 */}
