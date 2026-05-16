@@ -1,5 +1,6 @@
 import Guestbook from "@/components/Guestbook";
 import MathGame from "@/components/MathGame";
+import DressUpGame from "@/components/DressUpGame";
 
 export const dynamic = 'force-dynamic';
 
@@ -26,8 +27,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 사칙연산 게임 섹션 */}
+      {/* 옷 입히기 게임 섹션 */}
       <section className="w-full max-w-5xl mx-auto mt-16">
+        <DressUpGame />
+      </section>
+
+      {/* 사칙연산 게임 섹션 */}
+      <section className="w-full max-w-5xl mx-auto mt-24">
         <MathGame />
       </section>
 
