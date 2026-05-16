@@ -1,4 +1,5 @@
 import Guestbook from "@/components/Guestbook";
+import MathGame from "@/components/MathGame";
 
 export const dynamic = 'force-dynamic';
 
@@ -23,6 +24,11 @@ export default function Home() {
             시작하기 (기능 추가 예정)
           </button>
         </div>
+      </section>
+
+      {/* 사칙연산 게임 섹션 */}
+      <section className="w-full max-w-5xl mx-auto mt-16">
+        <MathGame />
       </section>
 
       {/* 추가 기능 섹션 예시 */}
