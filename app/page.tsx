@@ -1,5 +1,7 @@
 import Guestbook from "@/components/Guestbook";
 
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center flex-1 px-4 py-16 sm:px-6 lg:px-8">
