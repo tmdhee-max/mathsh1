@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { guestbook } from "@/db/schema";
 import { addGuestbookEntry } from "@/app/actions";
 import { desc } from "drizzle-orm";
+import AdminDeleteButton from "./AdminDeleteButton";
 
 export default async function Guestbook() {
   const entries = await db.select().from(guestbook).orderBy(desc(guestbook.createdAt));
@@ -59,6 +60,7 @@ export default async function Guestbook() {
                 <span className="text-xs font-medium text-slate-400 bg-slate-100 px-2 py-1 rounded-full group-hover/item:bg-slate-50 transition-colors">
                   {entry.createdAt.toLocaleDateString()}
                 </span>
+                <AdminDeleteButton id={entry.id} />
               </div>
               <p className="text-slate-600 leading-relaxed pl-10">{entry.message}</p>
             </div>
