@@ -1,3 +1,5 @@
+import Guestbook from "@/components/Guestbook";
+
 export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center flex-1 px-4 py-16 sm:px-6 lg:px-8">
@@ -24,17 +26,7 @@ export default function Home() {
       {/* 추가 기능 섹션 예시 */}
       <section className="w-full max-w-5xl mx-auto mt-24">
         {/* // 여기에 새로운 컴포넌트를 추가하세요. 예: 기능 소개 카드, 강의 목록 등 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 opacity-60">
-          <div className="p-6 bg-white rounded-2xl border border-slate-100 shadow-sm border-dashed flex items-center justify-center h-48">
-            <span className="text-slate-400 font-medium">컴포넌트 영역 1</span>
-          </div>
-          <div className="p-6 bg-white rounded-2xl border border-slate-100 shadow-sm border-dashed flex items-center justify-center h-48">
-            <span className="text-slate-400 font-medium">컴포넌트 영역 2</span>
-          </div>
-          <div className="p-6 bg-white rounded-2xl border border-slate-100 shadow-sm border-dashed flex items-center justify-center h-48">
-            <span className="text-slate-400 font-medium">컴포넌트 영역 3</span>
-          </div>
-        </div>
+        <Guestbook />
       </section>
     </div>
   );
