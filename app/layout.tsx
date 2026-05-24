@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "승희페이지 - 교육용 웹앱",
+  title: "재미있는 수학 연구소",
   description: "재밌는 수학 사이트",
 };
 
@@ -21,7 +21,7 @@ export default function RootLayout({
         <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md">
           <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
             <div className="flex items-center gap-2">
-              <span className="text-xl font-bold text-blue-600">승희페이지</span>
+              <span className="text-xl font-bold text-blue-600">재미있는 수학 연구소</span>
             </div>
             <nav className="hidden md:flex gap-6">
               {/* 여기에 새로운 네비게이션 아이템을 추가하세요 */}
@@ -43,7 +43,7 @@ export default function RootLayout({
         <footer className="border-t bg-white py-8 mt-auto">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
             <p className="text-sm text-slate-500">
-              © {new Date().getFullYear()} 승희페이지. All rights reserved.
+              © {new Date().getFullYear()} 재미있는 수학 연구소. All rights reserved.
             </p>
             {/* 여기에 새로운 푸터 링크나 정보를 추가하세요 */}
           </div>
