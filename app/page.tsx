@@ -15,7 +15,7 @@ export default async function Home() {
             재미있는 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">수학 연구소</span>
           </h1>
           <p className="max-w-2xl mx-auto text-lg sm:text-xl text-slate-600">
-            아래에 원하는 링크를 자유롭게 추가하고 나만의 맞춤형 페이지로 꾸며보세요.
+            조금 더 신나는 수학 공부를 위한 연구소입니다.
           </p>
         </div>
 
