@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { guestbook, mathGameRankings, customLinks } from "@/db/schema";
+import { guestbook, mathGameRankings, customLinks, siteStats } from "@/db/schema";
 import { eq, desc, asc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -144,5 +144,23 @@ export async function updateLinksOrder(orderedIds: number[], passwordInput: stri
   } catch (e) {
     console.error(e);
     return { success: false, message: "순서 변경 중 오류가 발생했습니다." };
+  }
+}
+
+export async function incrementAndGetVisits() {
+  try {
+    const stats = await db.select().from(siteStats).where(eq(siteStats.id, 1));
+    
+    if (stats.length === 0) {
+      await db.insert(siteStats).values({ id: 1, visits: 1 });
+      return 1;
+    } else {
+      const newVisits = stats[0].visits + 1;
+      await db.update(siteStats).set({ visits: newVisits }).where(eq(siteStats.id, 1));
+      return newVisits;
+    }
+  } catch (error) {
+    console.error("Failed to increment visits:", error);
+    return 0;
   }
 }

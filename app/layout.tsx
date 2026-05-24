@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { incrementAndGetVisits } from "@/app/actions";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -9,11 +10,13 @@ export const metadata: Metadata = {
   description: "재밌는 수학 사이트",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const visits = await incrementAndGetVisits();
+
   return (
     <html lang="ko">
       <body className={`${inter.className} min-h-screen flex flex-col bg-slate-50 text-slate-900`}>
@@ -42,12 +45,12 @@ export default function RootLayout({
         {/* 하단 푸터 */}
         <footer className="border-t bg-white py-8 mt-auto">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center gap-2">
-            <p className="text-sm text-slate-500">
-              © {new Date().getFullYear()} 재미있는 수학 연구소. All rights reserved.
+            <p className="text-sm text-slate-500 font-medium">
+              방문자 수: <span className="text-blue-600 font-bold">{visits.toLocaleString()}</span>명
             </p>
-            <a href="/admin" className="text-xs text-slate-400 hover:text-slate-600 transition-colors">
-              관리자 페이지
-            </a>
+            <p className="text-sm text-slate-500 mt-1">
+              © {new Date().getFullYear()} 재미있는 수학 연구소. 제작 승희샘
+            </p>
           </div>
         </footer>
       </body>

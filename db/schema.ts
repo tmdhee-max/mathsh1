@@ -25,3 +25,8 @@ export const customLinks = pgTable("custom_links", {
   orderIndex: integer("order_index").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+export const siteStats = pgTable("site_stats", {
+  id: integer("id").primaryKey(),
+  visits: integer("visits").default(0).notNull(),
+});
