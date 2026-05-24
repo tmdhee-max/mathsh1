@@ -2,7 +2,7 @@
 
 import { db } from "@/db";
 import { guestbook, mathGameRankings, customLinks } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, asc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export async function addGuestbookEntry(formData: FormData) {
@@ -89,7 +89,7 @@ export async function getAllGuestbookEntries(passwordInput: string) {
 }
 
 export async function getCustomLinks() {
-  const links = await db.select().from(customLinks).orderBy(desc(customLinks.createdAt));
+  const links = await db.select().from(customLinks).orderBy(asc(customLinks.orderIndex), desc(customLinks.createdAt));
   return links;
 }
 
@@ -127,4 +127,22 @@ export async function deleteCustomLink(id: number, passwordInput: string) {
   await db.delete(customLinks).where(eq(customLinks.id, id));
   revalidatePath("/");
   return { success: true, message: "링크가 삭제되었습니다." };
+}
+
+export async function updateLinksOrder(orderedIds: number[], passwordInput: string) {
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+  if (passwordInput !== ADMIN_PASSWORD) return { success: false, message: "비밀번호가 틀렸습니다." };
+
+  try {
+    for (let i = 0; i < orderedIds.length; i++) {
+      await db.update(customLinks)
+        .set({ orderIndex: i })
+        .where(eq(customLinks.id, orderedIds[i]));
+    }
+    revalidatePath("/");
+    return { success: true, message: "순서가 성공적으로 변경되었습니다." };
+  } catch (e) {
+    console.error(e);
+    return { success: false, message: "순서 변경 중 오류가 발생했습니다." };
+  }
 }

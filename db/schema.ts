@@ -22,5 +22,6 @@ export const customLinks = pgTable("custom_links", {
   url: text("url").notNull(),
   icon: text("icon").notNull(),
   color: text("color").notNull(),
+  orderIndex: integer("order_index").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });

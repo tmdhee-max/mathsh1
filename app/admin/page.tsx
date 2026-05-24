@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { getCustomLinks, addCustomLink, deleteCustomLink, getAllGuestbookEntries, deleteGuestbookEntry } from "@/app/actions";
+import { getCustomLinks, addCustomLink, deleteCustomLink, updateLinksOrder, getAllGuestbookEntries, deleteGuestbookEntry } from "@/app/actions";
 
 export default function AdminPage() {
   const [password, setPassword] = useState("");
@@ -12,6 +12,7 @@ export default function AdminPage() {
   
   const [newLink, setNewLink] = useState({ title: "", url: "", description: "", icon: "🌐" });
   const [isLoading, setIsLoading] = useState(false);
+  const [isOrderChanged, setIsOrderChanged] = useState(false);
 
   const login = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,6 +50,31 @@ export default function AdminPage() {
     setIsLoading(true);
     const res = await deleteCustomLink(id, password);
     if (res.success) {
+      const fetchedLinks = await getCustomLinks();
+      setLinks(fetchedLinks);
+    } else {
+      alert(res.message);
+    }
+    setIsLoading(false);
+  };
+
+  const moveLink = (index: number, direction: -1 | 1) => {
+    if (index + direction < 0 || index + direction >= links.length) return;
+    const newLinks = [...links];
+    const temp = newLinks[index];
+    newLinks[index] = newLinks[index + direction];
+    newLinks[index + direction] = temp;
+    setLinks(newLinks);
+    setIsOrderChanged(true);
+  };
+
+  const handleSaveOrder = async () => {
+    setIsLoading(true);
+    const orderedIds = links.map(l => l.id);
+    const res = await updateLinksOrder(orderedIds, password);
+    if (res.success) {
+      alert("순서가 저장되었습니다.");
+      setIsOrderChanged(false);
       const fetchedLinks = await getCustomLinks();
       setLinks(fetchedLinks);
     } else {
@@ -98,7 +124,14 @@ export default function AdminPage() {
       </div>
 
       <section className="bg-white p-6 sm:p-8 rounded-3xl shadow-lg border border-slate-100">
-        <h2 className="text-2xl font-bold text-slate-800 mb-6">🔗 커스텀 링크(배너) 관리</h2>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+          <h2 className="text-2xl font-bold text-slate-800">🔗 커스텀 링크(배너) 관리</h2>
+          {isOrderChanged && (
+            <button onClick={handleSaveOrder} disabled={isLoading} className="px-4 py-2 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition-colors animate-bounce shadow-md">
+              변경된 순서 저장
+            </button>
+          )}
+        </div>
         
         <form onSubmit={handleAddLink} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 bg-slate-50 p-6 rounded-2xl">
           <input type="text" placeholder="제목 (예: 구글)" required value={newLink.title} onChange={e => setNewLink({...newLink, title: e.target.value})} className="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500" />
@@ -111,9 +144,13 @@ export default function AdminPage() {
         </form>
 
         <div className="space-y-3">
-          {links.map(link => (
+          {links.map((link, index) => (
             <div key={link.id} className="flex flex-col sm:flex-row items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100 gap-4 transition-all hover:bg-white hover:shadow-sm">
               <div className="flex items-center gap-4 w-full sm:w-auto">
+                <div className="flex flex-col gap-1">
+                  <button type="button" onClick={() => moveLink(index, -1)} disabled={index === 0} className="p-1 text-xs bg-slate-200 text-slate-500 rounded hover:bg-slate-300 disabled:opacity-30 transition-opacity">🔼</button>
+                  <button type="button" onClick={() => moveLink(index, 1)} disabled={index === links.length - 1} className="p-1 text-xs bg-slate-200 text-slate-500 rounded hover:bg-slate-300 disabled:opacity-30 transition-opacity">🔽</button>
+                </div>
                 <span className="text-3xl">{link.icon}</span>
                 <div>
                   <h3 className="font-bold text-slate-800">{link.title}</h3>
