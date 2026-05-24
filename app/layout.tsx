@@ -49,7 +49,7 @@ export default async function RootLayout({
               방문자 수: <span className="text-blue-600 font-bold">{visits.toLocaleString()}</span>명
             </p>
             <p className="text-sm text-slate-500 mt-1">
-              © {new Date().getFullYear()} 재미있는 수학 연구소. 제작 승희샘
+              © {new Date().getFullYear()} 재미있는 수학 연구소. by 승희T
             </p>
           </div>
         </footer>
