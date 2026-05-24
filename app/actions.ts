@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { guestbook, mathGameRankings } from "@/db/schema";
+import { guestbook, mathGameRankings, customLinks } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -78,4 +78,53 @@ export async function getGameRankings(mode: 'time' | 'challenge') {
     .orderBy(desc(mathGameRankings.score))
     .limit(10);
   return rankings;
+}
+
+export async function getAllGuestbookEntries(passwordInput: string) {
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+  if (passwordInput !== ADMIN_PASSWORD) return { success: false, message: "비밀번호가 틀렸습니다." };
+  
+  const entries = await db.select().from(guestbook).orderBy(desc(guestbook.createdAt));
+  return { success: true, data: entries };
+}
+
+export async function getCustomLinks() {
+  const links = await db.select().from(customLinks).orderBy(desc(customLinks.createdAt));
+  return links;
+}
+
+export async function addCustomLink(
+  title: string, 
+  url: string, 
+  description: string, 
+  icon: string, 
+  passwordInput: string
+) {
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+  if (passwordInput !== ADMIN_PASSWORD) return { success: false, message: "비밀번호가 틀렸습니다." };
+
+  const colors = [
+    "from-blue-400 to-blue-600",
+    "from-green-400 to-green-600",
+    "from-red-400 to-red-600",
+    "from-purple-400 to-purple-600",
+    "from-pink-400 to-pink-600",
+    "from-yellow-400 to-orange-500",
+    "from-indigo-400 to-indigo-600",
+    "from-teal-400 to-teal-600",
+  ];
+  const color = colors[Math.floor(Math.random() * colors.length)];
+
+  await db.insert(customLinks).values({ title, url, description, icon, color });
+  revalidatePath("/");
+  return { success: true, message: "링크가 추가되었습니다." };
+}
+
+export async function deleteCustomLink(id: number, passwordInput: string) {
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+  if (passwordInput !== ADMIN_PASSWORD) return { success: false, message: "비밀번호가 틀렸습니다." };
+
+  await db.delete(customLinks).where(eq(customLinks.id, id));
+  revalidatePath("/");
+  return { success: true, message: "링크가 삭제되었습니다." };
 }

@@ -1,33 +1,11 @@
 import Guestbook from "@/components/Guestbook";
+import { getCustomLinks } from "@/app/actions";
 
 export const dynamic = 'force-dynamic';
 
-// 👇 여기에 원하는 링크들을 추가하고 수정하세요!
-const MY_LINKS = [
-  {
-    title: "구글",
-    description: "구글 검색엔진으로 이동합니다.",
-    url: "https://google.com",
-    icon: "🌐",
-    color: "from-blue-400 to-blue-600"
-  },
-  {
-    title: "네이버",
-    description: "네이버 메인 페이지로 이동합니다.",
-    url: "https://naver.com",
-    icon: "🔍",
-    color: "from-green-400 to-green-600"
-  },
-  {
-    title: "유튜브",
-    description: "유튜브에서 동영상을 시청하세요.",
-    url: "https://youtube.com",
-    icon: "▶️",
-    color: "from-red-400 to-red-600"
-  }
-];
+export default async function Home() {
+  const myLinks = await getCustomLinks();
 
-export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center flex-1 px-4 py-16 sm:px-6 lg:px-8">
       {/* Hero Section */}
@@ -51,9 +29,9 @@ export default function Home() {
       {/* 커스텀 링크 목록 섹션 */}
       <section id="my-links" className="w-full max-w-5xl mx-auto mt-20 scroll-mt-24">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {MY_LINKS.map((link, idx) => (
+          {myLinks.map((link) => (
             <a 
-              key={idx} 
+              key={link.id} 
               href={link.url} 
               target="_blank" 
               rel="noopener noreferrer"
@@ -70,6 +48,13 @@ export default function Home() {
               <p className="text-slate-500 font-medium leading-relaxed">{link.description}</p>
             </a>
           ))}
+          {myLinks.length === 0 && (
+            <div className="col-span-full flex flex-col items-center justify-center p-12 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
+              <span className="text-4xl mb-4">🔗</span>
+              <p className="text-slate-500 font-medium text-lg">아직 등록된 링크가 없습니다.</p>
+              <p className="text-slate-400 mt-1">관리자 페이지에서 첫 번째 링크를 추가해보세요!</p>
+            </div>
+          )}
         </div>
       </section>
 

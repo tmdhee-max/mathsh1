@@ -41,11 +41,13 @@ export default function RootLayout({
 
         {/* 하단 푸터 */}
         <footer className="border-t bg-white py-8 mt-auto">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center gap-2">
             <p className="text-sm text-slate-500">
               © {new Date().getFullYear()} 재미있는 수학 연구소. All rights reserved.
             </p>
-            {/* 여기에 새로운 푸터 링크나 정보를 추가하세요 */}
+            <a href="/admin" className="text-xs text-slate-400 hover:text-slate-600 transition-colors">
+              관리자 페이지
+            </a>
           </div>
         </footer>
       </body>

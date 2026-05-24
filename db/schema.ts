@@ -14,3 +14,13 @@ export const mathGameRankings = pgTable("math_game_rankings", {
   mode: text("mode").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+export const customLinks = pgTable("custom_links", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  url: text("url").notNull(),
+  icon: text("icon").notNull(),
+  color: text("color").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
