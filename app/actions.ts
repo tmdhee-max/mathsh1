@@ -1,8 +1,8 @@
 "use server";
 
 import { db } from "@/db";
-import { guestbook } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { guestbook, mathGameRankings } from "@/db/schema";
+import { eq, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 export async function addGuestbookEntry(formData: FormData) {
@@ -63,4 +63,19 @@ export async function askMathQuestion(messages: { role: string; content: string 
     console.error(error);
     return { error: "네트워크 통신 중 오류가 발생했습니다." };
   }
+}
+
+export async function saveGameScore(nickname: string, score: number, mode: 'time' | 'challenge') {
+  if (!nickname) return { success: false, message: "Nickname is required" };
+  await db.insert(mathGameRankings).values({ nickname, score, mode });
+  return { success: true };
+}
+
+export async function getGameRankings(mode: 'time' | 'challenge') {
+  const rankings = await db.select()
+    .from(mathGameRankings)
+    .where(eq(mathGameRankings.mode, mode))
+    .orderBy(desc(mathGameRankings.score))
+    .limit(10);
+  return rankings;
 }

@@ -1,4 +1,5 @@
 import Guestbook from "@/components/Guestbook";
+import IntegerMathGame from "@/components/IntegerMathGame";
 
 export const dynamic = 'force-dynamic';
 
@@ -18,16 +19,19 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-          {/* 가짜(Placeholder) 버튼 */}
-          <button className="w-full sm:w-auto px-8 py-3.5 text-base font-semibold text-white bg-blue-600 rounded-full shadow-lg shadow-blue-200 hover:bg-blue-700 hover:scale-105 hover:shadow-blue-300 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-            시작하기 (기능 추가 예정)
-          </button>
+          <a href="#math-game" className="w-full sm:w-auto px-8 py-3.5 text-base font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full shadow-lg shadow-blue-200 hover:scale-105 hover:shadow-blue-300 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 inline-block">
+            게임 시작하기 🎮
+          </a>
         </div>
       </section>
 
-      {/* 추가 기능 섹션 예시 */}
+      {/* 정수 사칙연산 게임 섹션 */}
+      <section id="math-game" className="w-full max-w-5xl mx-auto mt-16 scroll-mt-24">
+        <IntegerMathGame />
+      </section>
+
+      {/* 방명록 섹션 */}
       <section className="w-full max-w-5xl mx-auto mt-24">
-        {/* // 여기에 새로운 컴포넌트를 추가하세요. 예: 기능 소개 카드, 강의 목록 등 */}
         <Guestbook />
       </section>
     </div>
