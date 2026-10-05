@@ -3,6 +3,21 @@ import { boardPosts } from "@/db/schema";
 import { addBoardPost } from "@/app/actions";
 import { desc } from "drizzle-orm";
 
+const renderContentWithLinks = (text: string) => {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const parts = text.split(urlRegex);
+  return parts.map((part, i) => {
+    if (part.match(urlRegex)) {
+      return (
+        <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="text-teal-600 hover:text-teal-700 font-medium underline underline-offset-2">
+          {part}
+        </a>
+      );
+    }
+    return part;
+  });
+};
+
 export default async function Board() {
   const posts = await db.select().from(boardPosts).orderBy(desc(boardPosts.createdAt));
 
@@ -61,7 +76,7 @@ export default async function Board() {
                   {post.createdAt.toLocaleDateString()}
                 </span>
               </div>
-              <p className="text-slate-600 leading-relaxed mb-4 whitespace-pre-wrap">{post.content}</p>
+              <p className="text-slate-600 leading-relaxed mb-4 whitespace-pre-wrap">{renderContentWithLinks(post.content)}</p>
               <div className="flex items-center gap-2 text-sm font-medium text-slate-500">
                 <div className="w-6 h-6 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 text-xs">
                   {post.author.charAt(0).toUpperCase()}
