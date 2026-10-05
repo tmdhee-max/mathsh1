@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { getCustomLinks, addCustomLink, deleteCustomLink, updateLinksOrder, getAllGuestbookEntries, deleteGuestbookEntry } from "@/app/actions";
+import { getCustomLinks, addCustomLink, deleteCustomLink, updateLinksOrder, getAllGuestbookEntries, deleteGuestbookEntry, getAllBoardPosts, deleteBoardPost } from "@/app/actions";
 
 export default function AdminPage() {
   const [password, setPassword] = useState("");
@@ -9,6 +9,7 @@ export default function AdminPage() {
   
   const [links, setLinks] = useState<any[]>([]);
   const [entries, setEntries] = useState<any[]>([]);
+  const [boardPosts, setBoardPosts] = useState<any[]>([]);
   
   const [newLink, setNewLink] = useState({ title: "", url: "", description: "", icon: "🌐" });
   const [isLoading, setIsLoading] = useState(false);
@@ -24,6 +25,8 @@ export default function AdminPage() {
       setEntries(res.data || []);
       const fetchedLinks = await getCustomLinks();
       setLinks(fetchedLinks);
+      const fetchedBoard = await getAllBoardPosts(password);
+      if (fetchedBoard.success) setBoardPosts(fetchedBoard.data || []);
     } else {
       alert("비밀번호가 틀렸습니다.");
     }
@@ -96,6 +99,19 @@ export default function AdminPage() {
     setIsLoading(false);
   };
 
+  const handleDeleteBoardPost = async (id: number) => {
+    if(!confirm("정말 삭제하시겠습니까?")) return;
+    setIsLoading(true);
+    const res = await deleteBoardPost(id, password);
+    if (res.success) {
+      const fetchRes = await getAllBoardPosts(password);
+      if (fetchRes.success) setBoardPosts(fetchRes.data || []);
+    } else {
+      alert(res.message);
+    }
+    setIsLoading(false);
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
@@ -161,6 +177,26 @@ export default function AdminPage() {
             </div>
           ))}
           {links.length === 0 && <p className="text-slate-500 text-center py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200">등록된 링크가 없습니다.</p>}
+        </div>
+      </section>
+
+      <section className="bg-white p-6 sm:p-8 rounded-3xl shadow-lg border border-slate-100">
+        <h2 className="text-2xl font-bold text-slate-800 mb-6">📝 게시판 관리</h2>
+        <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+          {boardPosts.map(post => (
+            <div key={post.id} className="flex flex-col sm:flex-row items-center justify-between p-5 bg-slate-50 rounded-xl border border-slate-100 gap-4 transition-all hover:bg-white hover:shadow-sm">
+              <div className="w-full sm:w-auto">
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="font-bold text-slate-800">{post.title}</h3>
+                  <span className="text-xs text-slate-400 bg-slate-200 px-2 py-0.5 rounded-full">{new Date(post.createdAt).toLocaleDateString()}</span>
+                </div>
+                <div className="text-sm font-medium text-slate-500 mb-2">작성자: {post.author}</div>
+                <p className="text-slate-600 line-clamp-2">{post.content}</p>
+              </div>
+              <button onClick={() => handleDeleteBoardPost(post.id)} className="px-4 py-2 bg-rose-100 text-rose-600 rounded-lg hover:bg-rose-200 font-medium whitespace-nowrap w-full sm:w-auto transition-colors">삭제</button>
+            </div>
+          ))}
+          {boardPosts.length === 0 && <p className="text-slate-500 text-center py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200">등록된 게시글이 없습니다.</p>}
         </div>
       </section>
 

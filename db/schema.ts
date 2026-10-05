@@ -30,3 +30,11 @@ export const siteStats = pgTable("site_stats", {
   id: integer("id").primaryKey(),
   visits: integer("visits").default(0).notNull(),
 });
+
+export const boardPosts = pgTable("board_posts", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  author: text("author").notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});

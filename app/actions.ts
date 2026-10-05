@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { guestbook, mathGameRankings, customLinks, siteStats } from "@/db/schema";
+import { guestbook, mathGameRankings, customLinks, siteStats, boardPosts } from "@/db/schema";
 import { eq, desc, asc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -163,4 +163,32 @@ export async function incrementAndGetVisits() {
     console.error("Failed to increment visits:", error);
     return 0;
   }
+}
+
+export async function addBoardPost(formData: FormData) {
+  const title = formData.get("title") as string;
+  const author = formData.get("author") as string;
+  const content = formData.get("content") as string;
+
+  if (!title || !author || !content) return;
+
+  await db.insert(boardPosts).values({ title, author, content });
+  revalidatePath("/");
+}
+
+export async function getAllBoardPosts(passwordInput: string) {
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+  if (passwordInput !== ADMIN_PASSWORD) return { success: false, message: "비밀번호가 틀렸습니다." };
+  
+  const posts = await db.select().from(boardPosts).orderBy(desc(boardPosts.createdAt));
+  return { success: true, data: posts };
+}
+
+export async function deleteBoardPost(id: number, passwordInput: string) {
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+  if (passwordInput !== ADMIN_PASSWORD) return { success: false, message: "비밀번호가 틀렸습니다." };
+
+  await db.delete(boardPosts).where(eq(boardPosts.id, id));
+  revalidatePath("/");
+  return { success: true, message: "게시글이 삭제되었습니다." };
 }

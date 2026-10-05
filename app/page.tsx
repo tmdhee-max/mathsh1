@@ -1,4 +1,5 @@
 import Guestbook from "@/components/Guestbook";
+import Board from "@/components/Board";
 import { getCustomLinks } from "@/app/actions";
 
 export const dynamic = 'force-dynamic';
@@ -56,6 +57,11 @@ export default async function Home() {
             </div>
           )}
         </div>
+      </section>
+
+      {/* 게시판 섹션 */}
+      <section className="w-full max-w-5xl mx-auto mt-24">
+        <Board />
       </section>
 
       {/* 방명록 섹션 */}
